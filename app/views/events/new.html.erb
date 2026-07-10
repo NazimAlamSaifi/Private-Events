@@ -1,0 +1,36 @@
+<h1 style="margin-bottom: 1.5rem;">Host a New Event</h1>
+
+<div class="event-card">
+  <%= form_with model: @event do |form| %>
+    <% if @event.errors.any? %>
+      <div style="color: #f87171; margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #f87171; border-radius: 6px;">
+        <h3 style="margin-bottom: 0.5rem;">Please fix these errors:</h3>
+        <ul style="margin-left: 1.5rem;">
+          <% @event.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :title, style: "display: block; margin-bottom: 0.5rem; color: var(--text-muted);" %>
+      <%= form.text_field :title, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :location, style: "display: block; margin-bottom: 0.5rem; color: var(--text-muted);" %>
+      <%= form.text_field :location, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :date, style: "display: block; margin-bottom: 0.5rem; color: var(--text-muted);" %>
+      <%= form.datetime_field :date, class: "form-control" %>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <%= form.submit "Create Event", class: "btn btn-primary" %>
+      <%= link_to "Cancel", root_path, class: "btn btn-outline", style: "margin-left: 1rem;" %>
+    </div>
+  <% end %>
+</div>

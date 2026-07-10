@@ -1,0 +1,46 @@
+<div class="event-card" style="margin-top: 2rem;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <h1 class="event-title" style="font-size: 2.5rem; margin-bottom: 1rem;"><%= @event.title %></h1>
+      <p class="event-meta" style="font-size: 1.1rem;"><strong>Hosted by:</strong> <%= @event.creator.email %></p>
+      <p class="event-meta" style="font-size: 1.1rem;"><strong>Location:</strong> <%= @event.location %></p>
+      <p class="event-meta" style="font-size: 1.1rem; margin-bottom: 2rem;"><strong>Date:</strong> <%= @event.date %></p>
+    </div>
+
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <!-- Creator Controls (Edit/Delete) -->
+      <% if current_user == @event.creator %>
+        <%= link_to "Edit", edit_event_path(@event), class: "btn btn-outline" %>
+        <%= button_to "Delete", event_path(@event), method: :delete, class: "btn btn-outline", style: "border-color: #f87171; color: #f87171;", data: { turbo_confirm: "Are you sure?" } %>
+      <% end %>
+
+      <!-- Attendee Controls (RSVP / Cancel) -->
+      <% if user_signed_in? && current_user != @event.creator %>
+        <% if current_user.attended_events.include?(@event) %>
+          <%= button_to "Cancel RSVP", event_attendance_path(@event.id), method: :delete, class: "btn btn-outline", style: "border-color: #f87171; color: #f87171;" %>
+        <% else %>
+          <%= button_to "Attend Event", event_attendances_path(attended_event_id: @event.id), method: :post, class: "btn btn-primary" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <hr style="border-color: var(--border-color); margin: 2rem 0;">
+
+  <h3 style="margin-bottom: 1rem;">Attendees (<%= @event.attendees.count %>)</h3>
+  <% if @event.attendees.any? %>
+    <ul style="list-style-type: none; padding: 0;">
+      <% @event.attendees.each do |attendee| %>
+        <li style="padding: 0.5rem 0; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+          👤 <%= attendee.email %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="event-meta">No one has RSVP'd yet. Be the first!</p>
+  <% end %>
+</div>
+
+<div style="margin-top: 2rem;">
+  <%= link_to "← Back to All Events", root_path, class: "btn btn-outline" %>
+</div>
